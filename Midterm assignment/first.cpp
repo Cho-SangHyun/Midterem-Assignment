@@ -35,7 +35,7 @@ void contact_address::delete_address(string key) {                 // 연락처를 �
 	if (address.find(key) == address.end())
 		cout << "이미 연락처에 " << key << "가 없습니다" << endl;
 	else {
-		cout << key << "(" << address[key] << ")" << "을(를) 사전에서 제거합니다" << endl;
+		cout << key << "(" << address[key] << ")" << "을(를) 연락처에서 제거합니다" << endl;
 		address.erase(key);
 	}
 }
@@ -50,6 +50,47 @@ void contact_address::show_address() {                             // 연락처를 �
 			it++;
 		}
 	}
+}
+
+class GBBuser {
+protected:
+	string gbb[3];
+public:
+	GBBuser() {
+		gbb[0] = "가위", gbb[1] = "바위", gbb[2] = "보";
+	}
+	virtual string turn() = 0;
+};
+
+class GBBplayer : public GBBuser {
+public:
+	GBBplayer() : GBBuser() { ; }
+	virtual string turn();
+};
+
+string GBBplayer::turn() {
+	string word;
+	while (true) {
+		cout << "무엇을 내시겠습니까? : ";
+		cin >> word;
+		if (word == "가위" || word == "바위" || word == "보")
+			break;
+		else
+			cout << "잘못된 단어입니다. 다시 내도록 하세요." << endl;
+	}
+	return word;
+}
+
+class GBBcom : public GBBuser {
+public:
+	GBBcom() : GBBuser() { ; }
+	virtual string turn();
+};
+
+string GBBcom::turn() {
+	srand((unsigned)time(0));
+	int num = rand() % 3;
+	return gbb[num];
 }
 
 int main() {
@@ -124,7 +165,7 @@ int main() {
 				cout << "(2) >> Up & Down 게임하기" << endl;
 				cout << "(3) >> 영단어 뜻 맞추기 게임하기" << endl;
 				cout << "(4) >> 별먹기 게임하기" << endl;
-				cout << "(3) >> 흑과 백(2p) 게임하기" << endl;
+				cout << "(5) >> 흑과 백(2p) 게임하기" << endl;
 				cout << "\t*(다른 키 : 메뉴로 돌아가기)" << endl;
 				cout << "=================================" << endl;
 				cout << "플레이할 게임을 골라주세요 : ";
@@ -133,6 +174,35 @@ int main() {
 
 				switch (num2) {
 				case 1: {
+					GBBplayer player;
+					GBBcom com;
+					cout << "===== 가위바위보 게임을 시작합니다. 5라운드까지 진행됩니다. =====" << endl << endl;
+					for (int i = 1; i <= 5; i++) {
+						cout << "(" << i << ") " << "Round >>" << endl;
+						string players = player.turn();
+						string coms = com.turn();
+						cout << "컴퓨터가 낸 것 : " << coms << endl;
+						if (players == coms)
+							cout << "무승부입니다." << endl << endl;
+						else if (players == "가위") {
+							if (coms == "바위")
+								cout << "패배했습니다." << endl << endl;
+							else
+								cout << "승리했습니다." << endl << endl;
+						}
+						else if (players == "바위") {
+							if (coms == "보")
+								cout << "패배했습니다." << endl << endl;
+							else
+								cout << "승리했습니다." << endl << endl;
+						}
+						else if (players == "보") {
+							if (coms == "가위")
+								cout << "패배했습니다." << endl << endl;
+							else
+								cout << "승리했습니다." << endl << endl;
+						}
+					}
 					break;
 				}
 				case 2: {
