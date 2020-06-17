@@ -93,6 +93,52 @@ string GBBcom::turn() {
 	return gbb[num];
 }
 
+class UPandDOWN {
+	int value;
+	int level;
+public:
+	UPandDOWN(int level);
+	void playgame();
+};
+
+UPandDOWN::UPandDOWN(int level) {
+	this->level = level;
+	srand((unsigned)time(0));
+	value = rand() % 100;
+}
+
+void UPandDOWN::playgame() {
+	if (level == 1)
+		cout << "EASY 난이도로 게임을 시작합니다. 답은 0과 99사이에 있습니다. " << endl << endl;
+	else if (level == 2)
+		cout << "NORMAL 난이도로 게임을 시작합니다. 답은 0과 99사이에 있습니다. " << endl << endl;
+	else
+		cout << "HARD 난이도로 게임을 시작합니다. 답은 0과 99사이에 있습니다. " << endl << endl;
+
+	int number;
+	int count = 0;
+	while (count < 6 - level) {
+		cout << "(" << count + 1 << ") Round" << "\t(" << count+1 << "/" << 6 - level << ")" << endl;
+		cout << " >> ";
+		cin >> number;
+		if (number < 0 || 99 < number) {
+			cout << "답은 0과 99사이입니다. 다시 입력하세요." << endl;
+			continue;
+		}
+		if (number == value) {
+			cout << "맞추셨습니다!! 축하드립니다!" << endl << endl;
+			break;
+		}
+		if (number > value)
+			cout << " >> DOWN" << endl << endl;
+		else
+			cout << " >> UP" << endl << endl;
+		if (count == 6 - level - 1)
+			cout << "아쉽습니다. 정답은 " << value << "였습니다." << endl << endl;
+		count++;
+	}
+}
+
 int main() {
 	int menu;
 	contact_address A;
@@ -206,6 +252,23 @@ int main() {
 					break;
 				}
 				case 2: {
+					int game_level;
+					cout << "===== Up & Down 게임을 시작합니다. =====" << endl << endl;
+					cout << "(1) >> ★★☆☆☆ EASY " << endl;
+					cout << "(2) >> ★★★☆☆ NORMAL" << endl;
+					cout << "(3) >> ★★★★★ HARD" << endl;
+					cout << "========================================" << endl;
+
+					while (true) {
+						cout << ">> 난이도를 골라주세요 : ";
+						cin >> game_level;
+						if (0 < game_level && game_level < 4)
+							break;
+						cout << "\t잘못 입력하셨습니다." << endl <<endl;
+					}
+					cout << "========================================" << endl << endl;
+					UPandDOWN game(game_level);
+					game.playgame();
 					break;
 				}
 				case 3: {
