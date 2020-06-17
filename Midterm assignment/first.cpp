@@ -5,6 +5,45 @@
 #include <cstdlib>
 using namespace std;
 
+class Func {      //함수를 스태틱 멤버를 통해 전역함수처럼 만든 부분
+public:
+	static void random_set(int arr[], int size, int max);
+	static void arr_set(int arr[], int size, int wordnumber);
+};
+
+void Func::random_set(int arr[], int size, int max) {        //배열의 각 요소들을 랜덤하게 뽑은 수로 설정해주는 함수
+	srand((unsigned)time(0));
+	for (int i = 0; i < size; i++) {
+		arr[i] = rand() % max;
+		for (int j = 0; j < i; j++) {
+			if (arr[i] == arr[j]) {
+				i--;
+				break;
+			}
+		}
+	}
+}
+
+void Func::arr_set(int arr[], int size, int wordnumber) {  //배열의 각 요소 중 사용자가 원하는 값이 없다면, 배열의 각 요소 중 하나를 사용자가 원하는 값으로 바꿔줌.
+	int count = 0;
+	srand((unsigned)time(0));
+	for (int i = 0; i < size; i++) {
+		if (arr[i] == wordnumber) {
+			count++;
+			break;
+		}
+		else {
+			;
+		}
+	}
+	if (count == 1)
+		;
+	else {
+		int j = rand() % 4;
+		arr[j] = wordnumber;
+	}
+}
+
 class contact_address {                             //연락처 클래스
 	map<string, string> address;                        // map 컨테이너를 멤버변수로
 public:
@@ -122,7 +161,7 @@ void UPandDOWN::playgame() {
 		cout << " >> ";
 		cin >> number;
 		if (number < 0 || 99 < number) {
-			cout << "답은 0과 99사이입니다. 다시 입력하세요." << endl;
+			cout << " >> 답은 0과 99사이입니다. 다시 입력하세요." << endl << endl;
 			continue;
 		}
 		if (number == value) {
@@ -136,6 +175,47 @@ void UPandDOWN::playgame() {
 		if (count == 6 - level - 1)
 			cout << "아쉽습니다. 정답은 " << value << "였습니다." << endl << endl;
 		count++;
+	}
+}
+
+class guess_word {
+	map<string, string> Engdic;                      // 키, 값 모두 string값으로 받는 map컨테이너를 멤버 변수로 가짐
+public:
+	map<string, string>::iterator it;                // map 컨테이너의 iterator를 멤버 변수로 가짐
+	guess_word();
+	void set_iterator(int n);                        // iterator가 어떤 값을 가리키게 할 건지 설정
+	int get_wordcount() { return Engdic.size(); }    // map컨테이너의 사이즈 반환
+};
+
+guess_word::guess_word() {
+	Engdic.insert(make_pair("love", "사랑"));    //기본적으로 가질 20개 단어 저장
+	Engdic.insert(make_pair("chair", "의자"));
+	Engdic.insert(make_pair("desk", "책상"));
+	Engdic.insert(make_pair("window", "창문"));
+	Engdic.insert(make_pair("baby", "아기"));
+	Engdic.insert(make_pair("food", "음식"));
+	Engdic.insert(make_pair("road", "도로"));
+	Engdic.insert(make_pair("pig", "돼지"));
+	Engdic.insert(make_pair("picture", "사진"));
+	Engdic.insert(make_pair("apple", "사과"));
+	Engdic.insert(make_pair("grape", "포도"));
+	Engdic.insert(make_pair("friend", "친구"));
+	Engdic.insert(make_pair("bomb", "폭탄"));
+	Engdic.insert(make_pair("building", "건물"));
+	Engdic.insert(make_pair("earth", "지구"));
+	Engdic.insert(make_pair("straw", "빨대"));
+	Engdic.insert(make_pair("tree", "나무"));
+	Engdic.insert(make_pair("boy", "남자"));
+	Engdic.insert(make_pair("girl", "여자"));
+	Engdic.insert(make_pair("glass", "유리"));
+	it = Engdic.begin();
+}
+
+void guess_word::set_iterator(int n) {                     // iterator가 특정 녀석을 가리키게 설정하기
+	it = Engdic.begin();
+	if (0 < n && n < Engdic.size()) {
+		for (int i = 0; i < n; i++)
+			it++;
 	}
 }
 
@@ -272,6 +352,37 @@ int main() {
 					break;
 				}
 				case 3: {
+					guess_word dic;
+					int word[5];
+					int option[4];
+					int answer;
+					map<string, string>::iterator A;  //퀴즈게임에서 정답에 해당하는 놈을 가리킴
+					map<string, string>::iterator p[4];  //퀴즈게임에서 각각 4개의 보기에 해당하는 놈을 가리킴
+
+					cout << "===== 영단어 뜻 맞추기 게임을 시작합니다. =====" << endl << endl;
+					Func::random_set(word, 5, dic.get_wordcount());  //퀴즈로 낼 5개의 단어를 설정(랜덤으로)
+					for (int i = 0; i < 5; i++) {
+						dic.set_iterator(word[i]);
+						A = dic.it;              //이를 통해 while 이전에 선언된 A가 map컨테이너에서 정답인 값을 가리키게 된다 
+						cout << "(" << i + 1 << ") Round >> '" << A->first << "'" << endl;
+						Func::random_set(option, 4, dic.get_wordcount());    //보기로 주어질 4개의 단어 설정
+						Func::arr_set(option, 4, word[i]);                   //보기에 정답인 단어도 들어가도록 설정
+						for (int j = 0; j < 4; j++) {
+							dic.set_iterator(option[j]);
+							p[j] = dic.it;                  // 이를 통해 while 이전에 선언된 p들이 map컨테이너에서 보기에 해당하는 값들을 가리키게 됨
+						}
+						cout << "(1) " << p[0]->second << "\t(2) " << p[1]->second << "\t(3) " << p[2]->second << "\t(4) " << p[3]->second << "\n" << endl;
+						cout << "정답을 입력하세요. (보기에 없는 숫자를 누르면 오답으로 간주합니다) : ";
+						cin >> answer;
+						if (answer > 0 && answer < 5) {
+							if (p[answer - 1]->second == A->second)
+								cout << "정답!" << "\n" << endl;
+							else
+								cout << "오답!" << "\n" << endl;
+						}
+						else
+							cout << "오답!" << "\n" << endl;
+					}
 					break;
 				}
 				case 4: {
