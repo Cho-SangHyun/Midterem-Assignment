@@ -1,4 +1,6 @@
 ﻿  first.cpp
-C:\Users\98shc\source\repos\Midterm assignment\Midterm assignment\first.cpp(87,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-C:\Users\98shc\source\repos\Midterm assignment\Midterm assignment\first.cpp(216,17): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\98shc\source\repos\Midterm assignment\Midterm assignment\first.cpp(89,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\98shc\source\repos\Midterm assignment\Midterm assignment\first.cpp(218,17): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\98shc\source\repos\Midterm assignment\Midterm assignment\first.cpp(250,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\98shc\source\repos\Midterm assignment\Midterm assignment\first.cpp(273,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   Midterm assignment.vcxproj -> C:\Users\98shc\source\repos\Midterm assignment\Debug\Midterm assignment.exe

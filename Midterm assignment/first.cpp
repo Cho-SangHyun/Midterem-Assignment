@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include <map>
 #include <string>
 #include <ctime>
@@ -219,6 +221,80 @@ void guess_word::set_iterator(int n) {                     // iterator가 특정 녀
 	}
 }
 
+class BlackWhite {
+	vector<int> deck;
+public:
+	vector<int>::iterator it;
+	BlackWhite();
+	void show_rule();
+	void show_deck();
+	int submit_card();
+	void describe_number(int num);
+};
+
+BlackWhite::BlackWhite() {
+	deck = { 0,1,2,3,4,5,6,7,8 };
+}
+
+void BlackWhite::show_rule() {
+	string line;
+	ifstream fin("Rule.txt", ios::in);
+	while (getline(fin, line)) {
+		cout << line << endl;
+	}
+	fin.close();
+}
+
+void BlackWhite::show_deck() {
+	int black = 0, white = 0;
+	for (int i = 0; i < deck.size(); i++) {
+		if (deck[i] % 2 == 0)
+			black++;
+		else
+			white++;
+	}
+
+	cout << "Deck : ";;
+	for (int i = 0; i < black; i++)
+		cout << "□";
+	for (int i = 0; i < white; i++)
+		cout << "■";
+	cout << endl;
+}
+
+int BlackWhite::submit_card() {
+	int number;
+	int a = 1;
+	it = deck.begin();
+
+	while (true) {
+		cout << "제시할 숫자를 골라주십시오 : ";
+		cin >> number;
+		for (int i = 0; i < deck.size(); i++) {
+			if (deck[i] == number) {
+				for (int j = 0; j < i; j++) {
+					it++;
+				}
+				a = 0;
+				break;
+			}
+		}
+		if (a == 0)
+			break;
+		cout << "잘못 입력하셨습니다. " << endl;
+	}
+
+	it = deck.erase(it);
+	return number;
+}
+
+void BlackWhite::describe_number(int num) {
+	if (num % 2 == 1)
+		cout << "흰색카드(■)를 냈습니다." << endl;
+	else
+		cout << "검은카드(□)를 냈습니다." << endl;
+}
+
 int main() {
 	int menu;
 	contact_address A;
@@ -389,6 +465,85 @@ int main() {
 					break;
 				}
 				case 5: {
+					cout << "===== 흑과 백 게임을 시작합니다. =====" << endl << endl;
+					BlackWhite P1, P2;
+					int p1_num, p2_num;
+					int round = 1, p1_count = 0, p2_count = 0;
+					P1.show_rule();
+					cout << "======================================" << endl << endl;
+
+					while (true) {
+						cout << "<< (" << round << ") Round >> " << endl << endl;
+						cout << ":: 현재 승점 :: 1P >> " << p1_count << " : 2P >> " << p2_count << endl << endl;
+						cout << ":: 현재 플레이어 덱 ::" << endl;
+						cout << "1P ";
+						P1.show_deck();
+						cout << "2P ";
+						P2.show_deck();
+
+						if (round % 2 == 1) {
+							cout << "\n1P >> ";
+							p1_num = P1.submit_card();
+							cout << " >> 1P가 ";
+							P1.describe_number(p1_num);
+							cout << "\n:: 현재 플레이어 덱 ::" << endl;
+							cout << "1P ";
+							P1.show_deck();
+							cout << "2P ";
+							P2.show_deck();
+							cout << "\n2P >> ";
+							p2_num = P2.submit_card();
+							cout << " >> 2P가 ";
+							P2.describe_number(p2_num);
+						}
+						else {
+							cout << "\n2P >> ";
+							p2_num = P2.submit_card();
+							cout << " >> 2P가 ";
+							P2.describe_number(p2_num);
+							cout << "\n:: 현재 플레이어 덱 ::" << endl;
+							cout << "1P ";
+							P1.show_deck();
+							cout << "2P ";
+							P2.show_deck();
+							cout << "\n1P >> ";
+							p1_num = P1.submit_card();
+							cout << " >> 1P가 ";
+							P1.describe_number(p1_num);
+						}
+
+						if (p1_num == p2_num) 
+							cout << "\n비겼습니다." << endl;
+						else if (p1_num > p2_num) {
+							cout << "\n1P가 이겼습니다." << endl;
+							p1_count++;
+						}
+						else {
+							cout << "\n2P가 이겼습니다." << endl;
+							p2_count++;
+						}
+						cout << "======================================" << endl << endl;
+
+						if (p1_count == 5) {
+							cout << "1P가 먼저 승점 5점을 획득하여 1P의 승리로 끝납니다." << endl;
+							break;
+						}
+						if (p2_count == 5) {
+							cout << "2P가 먼저 승점 5점을 획득하여 2P의 승리로 끝납니다." << endl;
+							break;
+						}
+						if (round == 9) {
+							cout << "게임을 종료합니다. ";
+							if (p1_count == p2_count)
+								cout << "두 플레이어의 승점이 같습니다. 무승부입니다." << endl;
+							else if (p1_count > p2_count)
+								cout << p1_count << " : " << p2_count << "로 승점이 더 많은 1P의 승리입니다.";
+							else
+								cout << p1_count << " : " << p2_count << "로 승점이 더 많은 2P의 승리입니다.";
+							break;
+						}
+						round++;
+					}
 					break;
 				}
 				default: {
